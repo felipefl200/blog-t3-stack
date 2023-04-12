@@ -17,7 +17,7 @@ export default function Home() {
             <div className="h-5 w-5 rounded-full bg-gray-600"></div>
           </div>
           <div>
-            <button className="flex items-center space-x-3 rounded-md border transition-all border-gray-200 px-4 py-2 hover:border-gray-400 duration-300">
+            <button className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-2 transition-all duration-300 hover:border-gray-400">
               <div>Write</div>
               <div>
                 <FiEdit className="" />
@@ -26,7 +26,12 @@ export default function Home() {
           </div>
         </div>
       </header>
-      <div className="grid grid-cols-12">{/* main */}</div>
+      <section className="grid h-full w-full grid-cols-12 place-items-center">
+        <main className="col-span-8 h-full w-full border-r border-gray-200">
+          main content
+        </main>
+        <aside className="col-span-4">here sidebar</aside>
+      </section>
     </div>
   );
 }
