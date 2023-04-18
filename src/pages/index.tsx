@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex h-screen w-full flex-col">
       <header className="bg-gray-50 shadow-sm">
-        <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-6">
+        <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-12">
           <div>
             <IoReorderThreeOutline className="text-2xl text-gray-600" />
           </div>
@@ -18,7 +18,7 @@ export default function Home() {
               <BsBell className="text-2xl text-gray-600" />
             </div>
             <div>
-              <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+              <div className="h-10s w-10 rounded-full bg-gray-200"></div>
             </div>
             <div>
               <button className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400">
@@ -34,10 +34,10 @@ export default function Home() {
       <section className="mx-auto grid h-full w-full max-w-[96rem] grid-cols-12">
         <main className="col-span-12 h-full w-full border-r border-gray-200 px-24 md:col-span-8">
           <div className="flex w-full flex-col space-y-4 py-10">
-            <div className="flex w-full items-center space-x-4">
+            <div className="flex w-full flex-col items-center space-x-4 lg:flex-row">
               <label
                 htmlFor="search"
-                className="relative w-full rounded-full border border-gray-300 "
+                className="relative w-full min-w-max rounded-full border border-gray-300 "
               >
                 <div className="absolute left-2 flex h-full items-center">
                   <CiSearch />
@@ -48,9 +48,9 @@ export default function Home() {
                   className="w-full rounded-full px-4 py-1.5 pl-7 pr-6 outline-none"
                 />
               </label>
-              <div className="flex w-full items-center justify-end space-x-4">
-                <div>My Topics</div>
-                <div className="flex items-center space-x-2">
+              <div className="flex w-full items-center justify-end space-x-4 pt-4 lg:pt-0">
+                <div className="whitespace-nowrap">My Topics</div>
+                <div className="flex flex-wrap items-center gap-2">
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div
                       key={i}
@@ -162,7 +162,7 @@ export default function Home() {
                       Dolor ipsa harum incidunt reiciendis?
                     </div>
                     <div className="flex w-full items-center space-x-1 text-sm">
-                      <div className="h-8 w-8 rounded-full bg-gray-200"></div>
+                      <div className="aspect-square h-8 w-8 rounded-full bg-gray-200"></div>
                       <div>Paulo Silva &#x2022;</div>
                       <div>22 Dez. 2023</div>
                     </div>
