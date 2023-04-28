@@ -8,10 +8,10 @@ import { z } from "zod";
 type WriteFormType = {
   title: string;
   description: string;
-  body: string;
+  text: string;
 };
 
-const WriteFormSchema = z.object({
+export const WriteFormSchema = z.object({
   title: z.string().min(5, "Título obrigatário"),
   description: z.string().min(1, "Descrição obrigatária"),
   body: z.string().min(1, "Texto obrigatário"),
@@ -66,16 +66,16 @@ export function WriteFormModal() {
         </div>
         <div className="w-full">
           <textarea
-            {...register("body")}
-            name="mainBody"
+            {...register("text")}
+            name="mainText"
             id=""
             cols={10}
             rows={10}
             className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
             placeholder="Texto principal"
           />
-          {errors.body && (
-            <p className="text-xs italic text-red-500">{errors.body.message}</p>
+          {errors.text && (
+            <p className="text-xs italic text-red-500">{errors.text.message}</p>
           )}
         </div>
         <div className="flex w-full justify-end group">
