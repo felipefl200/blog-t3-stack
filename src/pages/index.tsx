@@ -1,36 +1,11 @@
-import { IoReorderThreeOutline } from "react-icons/io5";
-import { BsBell } from "react-icons/bs";
-import { FiEdit } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
 import { HiChevronDown } from "react-icons/hi";
 import { Tailwindcss } from "~/components/tailwindcss";
+import { MainLayout } from "~/layouts/MainLayout";
+import { WriteFormModal } from "~/components/WriteFormModal";
 export default function Home() {
   return (
-    <div className="flex h-screen w-full flex-col">
-      <header className="bg-gray-50 shadow-sm">
-        <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-12">
-          <div>
-            <IoReorderThreeOutline className="text-2xl text-gray-600" />
-          </div>
-          <div className="text-xl font-thin">Ultimate Blog</div>
-          <div className="flex items-center space-x-4">
-            <div>
-              <BsBell className="text-2xl text-gray-600" />
-            </div>
-            <div>
-              <div className="h-10s w-10 rounded-full bg-gray-200"></div>
-            </div>
-            <div>
-              <button className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400">
-                <div>Escrever</div>
-                <div>
-                  <FiEdit className="" />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <MainLayout>
       <section className="mx-auto grid h-full w-full max-w-[96rem] grid-cols-12">
         <main className="col-span-12 h-full w-full border-r border-gray-200 px-24 md:col-span-8">
           <div className="flex w-full flex-col space-y-4 py-10">
@@ -173,7 +148,8 @@ export default function Home() {
           </div>
         </aside>
       </section>
+      <WriteFormModal />
       <Tailwindcss />
-    </div>
+    </MainLayout>
   );
 }
