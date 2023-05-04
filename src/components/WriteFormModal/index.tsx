@@ -4,6 +4,8 @@ import { Modal } from "../Modal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { api } from "~/utils/api";
+import { toast } from "react-hot-toast";
 
 type WriteFormType = {
   title: string;
@@ -12,9 +14,9 @@ type WriteFormType = {
 };
 
 export const WriteFormSchema = z.object({
-  title: z.string().min(5, "Título obrigatário"),
-  description: z.string().min(1, "Descrição obrigatária"),
-  body: z.string().min(1, "Texto obrigatário"),
+  title: z.string().min(5, "Título obrigatária"),
+  description: z.string().min(3, "Descrição obrigatário"),
+  text: z.string().min(1, "Texto obrigatário"),
 });
 
 export function WriteFormModal() {
@@ -24,11 +26,26 @@ export function WriteFormModal() {
     register,
     handleSubmit,
     formState: { errors },
+
+    reset,
   } = useForm<WriteFormType>({
     resolver: zodResolver(WriteFormSchema),
   });
 
-  function handleWritePost(data: WriteFormType) {}
+  const createPost = api.post.createPost.useMutation({
+    onSuccess: () => {
+      toast.success("Post criado com sucesso!");
+      setIsWriteModalOpen(false);
+      reset();
+      postRoute.getPosts.invalidate();
+    },
+  });
+
+  const postRoute = api.useContext().post;
+
+  function handleWritePost(data: WriteFormType) {
+    createPost.mutate(data);
+  }
 
   return (
     <Modal isOpen={isWriteModalOpen} onClose={() => setIsWriteModalOpen(false)}>
@@ -54,9 +71,9 @@ export function WriteFormModal() {
           <input
             {...register("description")}
             type="text"
-            name="shortDescription"
+            name="description"
             className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
-            placeholder="Descrição curta"
+            placeholder="Descrição curta do post"
           />
           {errors.description && (
             <p className="text-xs italic text-red-500">
@@ -67,23 +84,24 @@ export function WriteFormModal() {
         <div className="w-full">
           <textarea
             {...register("text")}
-            name="mainText"
-            id=""
             cols={10}
             rows={10}
+            name="text"
             className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
-            placeholder="Texto principal"
+            placeholder="Texto do post"
           />
           {errors.text && (
             <p className="text-xs italic text-red-500">{errors.text.message}</p>
           )}
         </div>
-        <div className="flex w-full justify-end group">
+        <div className="group flex w-full justify-end">
           <button
             type="submit"
             className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400"
           >
-            <div className="group-hover:text-green-700 transition-colors duration-300 delay-300">Publicar</div>
+            <div className="transition-colors delay-300 duration-300 group-hover:text-green-700">
+              Publicar
+            </div>
           </button>
         </div>
       </form>

@@ -6,16 +6,19 @@ import { ImExit } from "react-icons/im";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { useContext, Fragment } from "react";
 import { GlobalContext } from "~/context/GlobalContext";
+import Link from "next/link";
 export function Header() {
   const { data: sessionData, status } = useSession();
   const { setIsWriteModalOpen } = useContext(GlobalContext);
   return (
     <header className="bg-gray-50 shadow-sm">
       <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-12">
-        <div>
-          <IoReorderThreeOutline className="text-2xl text-gray-600" />
-        </div>
-        <div className="text-xl font-thin">Ultimate Blog</div>
+        <IoReorderThreeOutline className="text-2xl text-gray-600" />
+        <Link href={"/"}>
+          <div className="cursor-pointer select-none text-xl font-thin">
+            Ultimate Blog
+          </div>
+        </Link>
         {status === "authenticated" ? (
           <div className="flex items-center space-x-4">
             <div>
@@ -25,7 +28,7 @@ export function Header() {
               {sessionData.user.image ? (
                 <>
                   <Menu
-                    as="button"
+                    as="div"
                     className="h-10 w-10 rounded-full p-0.5 outline-none ring-1 ring-gray-300 transition-all hover:ring-gray-500"
                   >
                     <Menu.Button>
