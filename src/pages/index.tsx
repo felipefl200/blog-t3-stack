@@ -3,6 +3,9 @@ import { MainLayout } from "~/layouts/MainLayout";
 import { WriteFormModal } from "~/components/WriteFormModal";
 import { MainSection } from "~/components/MainSection";
 import { SideSection } from "~/SideSection";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
