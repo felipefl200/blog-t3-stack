@@ -1,12 +1,15 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useCallback, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
-import { FcLike } from "react-icons/fc";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { MainLayout } from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
 
 export default function PostPage({}) {
   const router = useRouter();
+  const session = useSession();
   const getPost = api.post.getPost.useQuery(
     {
       slug: router.query.slug as string,
@@ -17,6 +20,33 @@ export default function PostPage({}) {
       // enabled: Boolean(router.query.slug)
     }
   );
+
+  const utils = api.useContext().post;
+
+  const likePost = api.post.likePost.useMutation({
+    onSuccess: () => {
+      utils.getPost.invalidate({ slug: router.query.slug as string });
+    },
+  });
+
+  const disLikePost = api.post.disLikePost.useMutation({
+    onSuccess: () => {
+      utils.getPost.invalidate({ slug: router.query.slug as string });
+    },
+  });
+
+  const likeByMe = () => {
+    if (
+      getPost.data?.likes.find((like) => like.userId === session.data?.user.id)
+    )
+      return true;
+    return false;
+  };
+
+  const countLikes = getPost.data?.likes.length || 0;
+
+  const [isLiked, setIsLiked] = useState(getPost.data?.likes.length);
+
   return (
     <MainLayout>
       {getPost.isLoading && (
@@ -28,10 +58,31 @@ export default function PostPage({}) {
       )}
       {getPost.isSuccess && (
         <div className="fixed bottom-10 flex w-full items-center justify-center">
-          <div className="flex items-center space-x-4 rounded-full border border-gray-400 bg-white px-6 py-3 hover:border-gray-600 hover:shadow">
-            <div className="flex items-center border-r border-gray-200 pr-2 space-x-1">
-              <FcLike className="text-2xl" />
-              <span>4</span>
+          <div className="group flex items-center space-x-4 rounded-full border border-gray-400 bg-white px-6 py-3 duration-150 hover:border-gray-600 hover:shadow">
+            <div className="flex items-center space-x-1 border-r border-gray-200 pr-2 duration-150 group-hover:border-gray-400">
+              {likeByMe() ? (
+                <>
+                  <FcLike
+                    onClick={() =>
+                      getPost.data?.id &&
+                      disLikePost.mutate({ postId: getPost.data?.id })
+                    }
+                    className="cursor-pointer text-2xl"
+                  />
+                  {countLikes > 0 ? <span>{countLikes}</span> : null}
+                </>
+              ) : (
+                <>
+                  <FcLikePlaceholder
+                    onClick={() =>
+                      getPost.data?.id &&
+                      likePost.mutate({ postId: getPost.data?.id })
+                    }
+                    className="cursor-pointer text-2xl"
+                  />
+                  {countLikes > 0 ? <span>{countLikes}</span> : null}
+                </>
+              )}
             </div>
             <div className="flex items-center space-x-1">
               <BsChat className="text-xl" />

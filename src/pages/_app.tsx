@@ -8,8 +8,13 @@ import "~/styles/globals.css";
 import { GlobalContextProvider } from "~/context/GlobalContext";
 import { Toaster } from "react-hot-toast";
 
-import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
+import { Roboto } from "next/font/google";
+const roboto = Roboto({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -19,7 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <>
       <style jsx global>{`
         html {
-          font-family: ${inter.style.fontFamily};
+          font-family: ${roboto.style.fontFamily};
         }
       `}</style>
       <SessionProvider session={session}>
