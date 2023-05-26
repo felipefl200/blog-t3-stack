@@ -10,10 +10,10 @@ import { Toaster } from "react-hot-toast";
 
 import { Roboto } from "next/font/google";
 const roboto = Roboto({
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-  display: 'swap',
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -28,9 +28,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         }
       `}</style>
       <SessionProvider session={session}>
-        <Toaster />
         <GlobalContextProvider>
           <Component {...pageProps} />
+          <Toaster />
         </GlobalContextProvider>
       </SessionProvider>
     </>

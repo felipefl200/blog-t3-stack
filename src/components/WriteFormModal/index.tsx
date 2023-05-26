@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Modal } from "../Modal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { isValid, z } from "zod";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
 
@@ -14,7 +14,7 @@ type WriteFormType = {
 };
 
 export const WriteFormSchema = z.object({
-  title: z.string().min(5, "Título obrigatária"),
+  title: z.string().min(5, "Título obrigatário"),
   description: z.string().min(3, "Descrição obrigatário"),
   text: z.string().min(1, "Texto obrigatário"),
 });
@@ -25,7 +25,7 @@ export function WriteFormModal() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
 
     reset,
   } = useForm<WriteFormType>({
@@ -96,10 +96,11 @@ export function WriteFormModal() {
         </div>
         <div className="group flex w-full justify-end">
           <button
+            disabled={!isValid}
             type="submit"
-            className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400"
+            className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400 disabled:opacity-50"
           >
-            <div className="transition-colors delay-300 duration-300 group-hover:text-green-700">
+            <div className="transition-colors duration-300 delay-300 group-hover:text-green-700">
               Publicar
             </div>
           </button>

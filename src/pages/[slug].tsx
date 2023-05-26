@@ -1,13 +1,15 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { MainLayout } from "~/layouts/MainLayout";
 import { api } from "~/utils/api";
+import { CommentSidebar } from "~/components/CommentSidebar";
 
 export default function PostPage({}) {
+  const post = false;
   const router = useRouter();
   const session = useSession();
   const getPost = api.post.getPost.useQuery(
@@ -44,11 +46,20 @@ export default function PostPage({}) {
   };
 
   const countLikes = getPost.data?.likes.length || 0;
+  const countComments = getPost.data?.comments.length || 0;
 
-  const [isLiked, setIsLiked] = useState(getPost.data?.likes.length);
+  const [showCommentSidebar, setShowCommentSiidebar] = useState(false);
 
   return (
     <MainLayout>
+      {getPost.data?.id && (
+        <CommentSidebar
+          showCommentSidebar={showCommentSidebar}
+          setShowCommentSidebar={setShowCommentSiidebar}
+          postId={getPost.data?.id}
+        />
+      )}
+
       {getPost.isLoading && (
         <div className="flex h-full w-full items-center justify-center space-x-4">
           <div>
@@ -85,8 +96,11 @@ export default function PostPage({}) {
               )}
             </div>
             <div className="flex items-center space-x-1">
-              <BsChat className="text-xl" />
-              <span>4</span>
+              <BsChat
+                onClick={() => setShowCommentSiidebar(true)}
+                className="cursor-pointer text-xl"
+              />
+              {countComments > 0 ? <span>{countComments}</span> : null}
             </div>
           </div>
         </div>

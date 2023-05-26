@@ -6,10 +6,63 @@ import { ImExit } from "react-icons/im";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { useContext, Fragment } from "react";
 import { GlobalContext } from "~/context/GlobalContext";
+import { api } from "~/utils/api";
 import Link from "next/link";
+
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-hot-toast";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/modal";
+
+type WriteFormType = {
+  title: string;
+  description: string;
+  text: string;
+};
+
+export const WriteFormSchema = z.object({
+  title: z.string().min(5, "Título obrigatário"),
+  description: z.string().min(3, "Descrição obrigatário"),
+  text: z.string().min(1, "Texto obrigatário"),
+});
+
 export function Header() {
   const { data: sessionData, status } = useSession();
   const { setIsWriteModalOpen } = useContext(GlobalContext);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+
+    reset,
+  } = useForm<WriteFormType>({
+    resolver: zodResolver(WriteFormSchema),
+  });
+
+  const createPost = api.post.createPost.useMutation({
+    onSuccess: () => {
+      toast.success("Post criado com sucesso!");
+      setIsWriteModalOpen(false);
+      reset();
+      postRoute.getPosts.invalidate();
+    },
+  });
+
+  const postRoute = api.useContext().post;
+
+  function handleWritePost(data: WriteFormType) {
+    createPost.mutate(data);
+  }
   return (
     <header className="bg-gray-50 shadow-sm">
       <div className="mx-auto flex h-16 w-full max-w-[96rem] items-center justify-between px-12">
@@ -64,7 +117,7 @@ export function Header() {
               )}
             </div>
             <div>
-              <button
+              {/* <button
                 onClick={() => setIsWriteModalOpen(true)}
                 className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400"
               >
@@ -72,7 +125,81 @@ export function Header() {
                 <div>
                   <FiEdit className="" />
                 </div>
-              </button>
+              </button> */}
+              <Dialog>
+                <DialogTrigger className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 transition-all duration-300 hover:border-gray-400">
+                  <div>Escrever</div>
+                  <div>
+                    <FiEdit />
+                  </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="mb-2">
+                      Vamos escrever um novo post ?
+                    </DialogTitle>
+                    <DialogDescription>
+                      <form
+                        onSubmit={handleSubmit(handleWritePost)}
+                        className="flex flex-col items-center justify-center space-y-4"
+                      >
+                        <div className="w-full">
+                          <input
+                            {...register("title")}
+                            type="text"
+                            name="title"
+                            className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
+                            placeholder="Título do post"
+                          />
+                          {errors.title && (
+                            <p className="text-xs italic text-red-500">
+                              {errors.title.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="w-full">
+                          <input
+                            {...register("description")}
+                            type="text"
+                            name="description"
+                            className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
+                            placeholder="Descrição curta do post"
+                          />
+                          {errors.description && (
+                            <p className="text-xs italic text-red-500">
+                              {errors.description.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="w-full">
+                          <textarea
+                            {...register("text")}
+                            cols={10}
+                            rows={10}
+                            name="text"
+                            className="h-full w-full rounded-md border border-gray-300 p-4 outline-none focus:border-gray-600 active:border-gray-600"
+                            placeholder="Texto do post"
+                          />
+                          {errors.text && (
+                            <p className="text-xs italic text-red-500">
+                              {errors.text.message}
+                            </p>
+                          )}
+                        </div>
+                        <div className="group flex w-full justify-end">
+                          <button
+                            disabled={!isValid}
+                            type="submit"
+                            className="flex items-center space-x-3 rounded-md border border-gray-200 px-4 py-1.5 text-green-600 transition-all duration-300 hover:border-gray-400 disabled:text-red-500 disabled:opacity-70 disabled:hover:border-gray-200"
+                          >
+                            <div>Publicar</div>
+                          </button>
+                        </div>
+                      </form>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         ) : (
