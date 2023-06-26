@@ -48,14 +48,14 @@ export default function PostPage({}) {
   const countLikes = getPost.data?.likes.length || 0;
   const countComments = getPost.data?.comments.length || 0;
 
-  const [showCommentSidebar, setShowCommentSiidebar] = useState(false);
+  const [showCommentSidebar, setShowCommentSidebar] = useState(false);
 
   return (
     <MainLayout>
       {getPost.data?.id && (
-        <CommentSidebar
+        <CommentSidebar          
           showCommentSidebar={showCommentSidebar}
-          setShowCommentSidebar={setShowCommentSiidebar}
+          setShowCommentSidebar={setShowCommentSidebar}
           postId={getPost.data?.id}
         />
       )}
@@ -97,7 +97,7 @@ export default function PostPage({}) {
             </div>
             <div className="flex items-center space-x-1">
               <BsChat
-                onClick={() => setShowCommentSiidebar(true)}
+                onClick={() => setShowCommentSidebar(true)}
                 className="cursor-pointer text-xl"
               />
               {countComments > 0 ? <span>{countComments}</span> : null}
